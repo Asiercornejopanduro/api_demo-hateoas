@@ -16,8 +16,6 @@ import static com.example.demo.dao.MongoConector.getConnectionDbAndCollection;
 public class PersonDao {
 
     private static PersonDao INSTANCE = null;
-
-
     private static final String DB = "publicaciones-familias";
     private static final String COLLECTION = "personas";
 
@@ -33,7 +31,13 @@ public class PersonDao {
         return INSTANCE;
     }
 
-
+    /**
+     * Reads all the documents storaged on the "personas" collection, from the "publicaciones-familias" database,and puts them on an ArrayList
+     *
+     * @return an ArrayList of Person objects
+     * @throws UnknownHostException if the personas collection is empty.
+     * @see Person
+     */
     public ArrayList<Person> listar() throws UnknownHostException {
 
         ArrayList<Person> personas = new ArrayList<>();
@@ -54,6 +58,13 @@ public class PersonDao {
 
     }
 
+    /**
+     * Gets a Comment object specified by the id parameter.
+     *
+     * @param id the id number of the person which want to see.
+     * @return the person which have the specified id if exist on the collection.
+     * @see Person
+     */
     public Person obtenerPorId(int id) throws UnknownHostException {
         Person p = new Person();
 
@@ -75,6 +86,13 @@ public class PersonDao {
         return p;
     }
 
+    /**
+     * Delete the person document specified  by the id parameter,from the "personas" collection on the "publicaciones-familias" database.
+     *
+     * @param id Person id atribute which want to delete.
+     * @return true if the delete operation was succesfully, false if not.
+     * @throws UnknownHostException if the database publicaciones-familias,the personas collection or both don´t exist.
+     */
     public boolean eliminar(int id) throws UnknownHostException {
         boolean result = false;
         DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
@@ -88,6 +106,13 @@ public class PersonDao {
 
     }
 
+    /**
+     * Insert on the "personas" collection from the "publicaciones-familias" database,the Person object parameter.
+     *
+     * @param p Person who want to insert on the collection.
+     * @return TRUE if the insert opration was succesfully, FALSE if not.
+     * @throws UnknownHostException if the database publicaciones-familias,the personas collection or both don´t exist.
+     */
     public boolean crear(Person p) throws UnknownHostException {
 
         boolean result = false;
@@ -112,6 +137,14 @@ public class PersonDao {
         return result;
     }
 
+    /**
+     * Updates the comment specified by id parameter.
+     *
+     * @param id Id atribute of the Person object that want to update
+     * @param p  Person object with the updated values.
+     * @return true if the update operation was succesfully,false if not.
+     * @throws UnknownHostException if the database publicaciones-familias,the personas collection or both don´t exist.
+     */
     public boolean modificar(int id, Person p) throws UnknownHostException {
         boolean result = false;
         DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);

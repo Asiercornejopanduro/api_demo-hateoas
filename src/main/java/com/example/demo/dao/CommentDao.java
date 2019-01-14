@@ -37,7 +37,7 @@ public class CommentDao {
      *
      * @return an ArrayList of Comment objects
      * @throws UnknownHostException if the comments collection is empty.
-     * @see com.example.demo.pojo.Comment
+     * @see Comment
      */
     public ArrayList<Comment> listar() throws UnknownHostException {
         ArrayList<Comment> comments = new ArrayList<>();
@@ -148,6 +148,7 @@ public class CommentDao {
      *
      * @param comment A comment object wich want to insert on the collection.
      * @return true if the object was inserted succesfully, false if not.
+     * @see Comment
      */
     public boolean crear(Comment comment) {
         boolean result = false;
@@ -180,7 +181,7 @@ public class CommentDao {
      * @param id      Id atribute of the comment object that want to update
      * @param comment Comment object with the updated values.
      * @return true if the update operation was succesfully,false if not.
-     * @throws UnknownHostException
+     * @throws UnknownHostException if the database publicaciones-familias,the comment collection or both don´t exist.
      */
     public boolean modificar(int id, Comment comment) throws UnknownHostException {
         boolean result = false;

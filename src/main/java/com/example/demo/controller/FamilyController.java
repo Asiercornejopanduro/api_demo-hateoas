@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+/**
+ * Controller to manage the familias collection.
+ */
 @Controller
 @RequestMapping(value = "/publicaciones/family")
 public class FamilyController {
@@ -30,6 +33,11 @@ public class FamilyController {
         serviciofamily = FamilyService.getInstance();
     }
 
+    /**
+     * Gets a list of the families in JSON format, on the familias collection.
+     *
+     * @return ResponseEntity object with all the families documents on the collection, and the http status code,Ok if the operation was succesfully or CONFLICT if not.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> listAll() {
 
@@ -42,11 +50,11 @@ public class FamilyController {
                 System.out.println("*************Pasamos por PersonController-get*************");
                 for (Family f : familias) {
                     Link selfLink = linkTo(FamilyController.class).slash(f.getFamilyId()).withSelfRel();
-                    Link familiesLink=linkTo(methodOn(FamilyController.class).listAll()).withRel("Listado Familias");
+                    Link familiesLink = linkTo(methodOn(FamilyController.class).listAll()).withRel("Listado Familias");
                     f.add(selfLink);
                     f.add(familiesLink);
 
-                    for (Person p:f.getPersonas())  {
+                    for (Person p : f.getPersonas()) {
                         Link personfLink = linkTo(PersonController.class).slash(p.getPersonId()).withSelfRel();
                         p.add(personfLink);
                     }
@@ -65,7 +73,12 @@ public class FamilyController {
 
     }
 
-
+    /**
+     * Gets the Family object in JSON format, specified by the id parameter.
+     *
+     * @param id Family id wich indicates the location of the resource.
+     * @return ResponseEntity object with the requested resource and the http status code, FOUND if exist and NOT_FOUND if not, and the requested resource.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> detail(@PathVariable int id) {
         Family family;
@@ -81,7 +94,7 @@ public class FamilyController {
                 family.add(selfLink);
 
 
-                for (Person p:family.getPersonas())  {
+                for (Person p : family.getPersonas()) {
                     Link personfLink = linkTo(PersonController.class).slash(p.getPersonId()).withSelfRel();
                     p.add(personfLink);
                 }
@@ -103,6 +116,12 @@ public class FamilyController {
 
     }
 
+    /**
+     * Insert a new document on the "familias" collection.
+     *
+     * @param familia Family object in JSON format, wich want to insert.
+     * @return ResponseEntity object with the http status code, CREATED if the operation was succesfully,BAD_REQUEST if not, and the inserted object.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> crear(@RequestBody Family familia) {
         ResponseEntity<Object> response = new ResponseEntity<>(familias, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -126,7 +145,12 @@ public class FamilyController {
         return response;
     }
 
-
+    /**
+     * Delete the document specified by the id parameter.
+     *
+     * @param id family id wich indicates the location of the resource to delete.
+     * @return ResponseEntity object with the http status code, Ok if the operation was succesfully and NOT_FOUND if not.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable int id) {
 
@@ -152,6 +176,13 @@ public class FamilyController {
         return response;
     }
 
+    /**
+     * Update the document on the "familias" collection.
+     *
+     * @param id      Family id wich want to update.
+     * @param familia Family object with the updated values.
+     * @return ResponseEntity object with the http status code, Ok if the operation was succesfully,BAD_REQUEST if not, and the family object in JSON format.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> moodificar(@PathVariable int id, @RequestBody Family familia) {
 
@@ -160,9 +191,10 @@ public class FamilyController {
         try {
 
             if (serviciofamily.modificar(id, familia)) {
+                familia = serviciofamily.obtenerPorId(id);
                 Link selfLink = linkTo(PersonController.class).slash(familia.getFamilyId()).withSelfRel();
                 familia.add(selfLink);
-                response = new ResponseEntity<>(HttpStatus.OK);
+                response = new ResponseEntity<>(familia, HttpStatus.OK);
 
             } else {
 

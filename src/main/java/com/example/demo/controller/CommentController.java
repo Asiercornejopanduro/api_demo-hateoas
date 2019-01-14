@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+/**
+ * Controller to manage comments
+ */
 @Controller
 @RequestMapping("/publicaciones/comments")
 public class CommentController {
@@ -32,6 +35,11 @@ public class CommentController {
         servicioComment = CommentService.getInstance();
     }
 
+    /**
+     * Gets a list of the comments in JSON format, on the comments collection.
+     *
+     * @return ResponseEntity object with all the comments documents on the collection, and the http status code,Ok if the operation was succesfully or CONFLICT if not.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> listAll() {
 
@@ -72,7 +80,12 @@ public class CommentController {
 
     }
 
-
+    /**
+     * Gets the Comments object in JSON format, specified by the id parameter.
+     *
+     * @param id Comment id wich indicates the location of the resource.
+     * @return ResponseEntity object with the requested resource and the http status code, FOUND if exist and NOT_FOUND if not.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> detail(@PathVariable int id) {
         Comment comment;
@@ -101,6 +114,12 @@ public class CommentController {
 
     }
 
+    /**
+     * Delete the document specified by the id parameter.
+     *
+     * @param id Comment id wich indicates the location of the resource to delete.
+     * @return ResponseEntity object with the http status code, Ok if the operation was succesfully and NOT_FOUND if not.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable int id) {
 
@@ -126,6 +145,12 @@ public class CommentController {
         return response;
     }
 
+    /**
+     * Insert a new document on the "comments" collection.
+     *
+     * @param comment Comment object in JSON format, wich want to insert.
+     * @return ResponseEntity object with the http status code, CREATED if the operation was succesfully and BAD_REQUEST if not.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> crear(@RequestBody Comment comment) {
         ResponseEntity<Object> response = new ResponseEntity<>(comments, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -133,23 +158,9 @@ public class CommentController {
         try {
             comments = servicioComment.listar();
             if (servicioComment.crear(comment)) {
-                int id = comment.getCommentId();
+                Comment newCommen = servicioComment.obtenerPorId(comment.getCommentId());
 
-                comment = servicioComment.obtenerPorId(id);
-                /*Link selfLink = linkTo(CommentController.class).slash(comment.getCommentId()).withSelfRel();
-                comment.add(selfLink);
-
-                Link familyLink = linkTo(methodOn(FamilyController.class).detail(comment.getFamilia().getFamilyId())).withRel("Familia");
-                comment.add(familyLink);
-
-                Link personLink = linkTo(PersonController.class).slash(comment.getPersona().getPersonId()).withRel("Autor");
-                comment.add(personLink);
-
-                Link commentLink = linkTo(methodOn(CommentController.class).listAll()).withRel("Listado comments");
-                comment.add(commentLink);*/
-
-
-                response = new ResponseEntity<>(setLinks(comment), HttpStatus.CREATED);
+                response = new ResponseEntity<>(newCommen, HttpStatus.CREATED);
             } else {
                 response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -161,7 +172,13 @@ public class CommentController {
         return response;
     }
 
-
+    /**
+     * Update the document on the "comments" collection.
+     *
+     * @param id      Comment id wich want to update.
+     * @param comment Comment object with the updated values.
+     * @return ResponseEntity object with the http status code, Ok if the operation was succesfully and BAD_REQUEST if not and the updated document JSON formatted.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> moodificar(@PathVariable int id, @RequestBody Comment comment) {
 
@@ -170,19 +187,6 @@ public class CommentController {
         try {
 
             if (servicioComment.modificar(id, comment)) {
-
-
-               /* Link selfLink = linkTo(PersonController.class).slash(comment.getCommentId()).withSelfRel();
-                comment.add(selfLink);
-
-                Link familyLink = linkTo(methodOn(FamilyController.class).detail(comment.getFamilia().getFamilyId())).withRel("Familia");
-                comment.add(familyLink);
-
-                Link personLink = linkTo(PersonController.class).slash(comment.getPersona().getPersonId()).withRel("Autor");
-                comment.add(personLink);
-
-                Link commentLink = linkTo(methodOn(CommentController.class).listAll()).withRel("Listado comments");
-                comment.add(commentLink);*/
 
                 response = new ResponseEntity<>(setLinks(comment), HttpStatus.OK);
 
@@ -200,7 +204,12 @@ public class CommentController {
         return response;
     }
 
-
+    /**
+     * Adds all the link resources of the object.
+     *
+     * @param comment The Comment object wich want to add the links.
+     * @return Comment object ipdated with the link resources.
+     */
     private Comment setLinks(Comment comment) {
         Link selfLink = linkTo(CommentController.class).slash(comment.getCommentId()).withSelfRel();
         comment.add(selfLink);

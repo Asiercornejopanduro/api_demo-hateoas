@@ -14,9 +14,9 @@ public class MongoConector {
     }
 
     /**
-     * @param dataBase  nombre de la base de datos
-     * @param coleccion nombre de la 'tabla'
-     * @return DBCollection coleccion
+     * @param dataBase  Database name
+     * @param coleccion Collection from the database
+     * @return DBCollection Collection from the database specified by the coleccion parameter
      */
     public static DBCollection getConnectionDbAndCollection(String dataBase, String coleccion) throws UnknownHostException {
 

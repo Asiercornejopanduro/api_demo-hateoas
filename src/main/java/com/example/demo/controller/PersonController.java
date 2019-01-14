@@ -17,9 +17,13 @@ import java.util.ArrayList;
 import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+/**
+ * Controller to manage the personas collection.
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/publicaciones/person")
+
 public class PersonController {
 
     private static ArrayList<Person> people;
@@ -33,6 +37,11 @@ public class PersonController {
         servicioComment = CommentService.getInstance();
     }
 
+    /**
+     * Gets a list of the people in JSON format, on the personas collection.
+     *
+     * @return ResponseEntity object with all the people documents on the collection, and the http status code,Ok if the operation was succesfully or CONFLICT if not.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> listAll() {
 
@@ -80,7 +89,12 @@ public class PersonController {
 
     }
 
-
+    /**
+     * Gets the Person object in JSON format, specified by the id parameter.
+     *
+     * @param id Person id wich indicates the location of the resource.
+     * @return ResponseEntity object with the requested resource and the http status code, FOUND if exist and NOT_FOUND if not, and the requested resource.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> detail(@PathVariable int id) {
         Person persona;
@@ -116,6 +130,12 @@ public class PersonController {
 
     }
 
+    /**
+     * Delete the document specified by the id parameter.
+     *
+     * @param id Person id wich indicates the location of the resource to delete.
+     * @return ResponseEntity object with the http status code, Ok if the operation was succesfully and NOT_FOUND if not.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable int id) {
 
@@ -141,6 +161,12 @@ public class PersonController {
         return response;
     }
 
+    /**
+     * Insert a new document on the "personas" collection.
+     *
+     * @param persona Person object in JSON format, wich want to insert.
+     * @return ResponseEntity object with the http status code, CREATED if the operation was succesfully and BAD_REQUEST if not and the inserted object.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Object> crear(@RequestBody Person persona) {
         ResponseEntity<Object> response = new ResponseEntity<>(people, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -164,7 +190,13 @@ public class PersonController {
         return response;
     }
 
-
+    /**
+     * Update the document on the "personas" collection.
+     *
+     * @param id Person id wich want to update.
+     * @param p  Person object with the updated values.
+     * @return ResponseEntity object with the http status code, Ok if the operation was succesfully and BAD_REQUEST if not.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> moodificar(@PathVariable int id, @RequestBody Person p) {
 

@@ -118,6 +118,14 @@ public class FamilyDao {
         return result;
     }
 
+    /**
+     * Insert on the "familias" collection from the "publicaciones-familias" database,the family object parameter.
+     *
+     * @param familia A Family object wich want to insert on the collection.
+     * @return true if the object was inserted succesfully, false if not.
+     * @see Family
+     */
+
     public boolean crear(Family familia) {
         boolean result = false;
         DBCollection collection = null;
@@ -146,6 +154,15 @@ public class FamilyDao {
         return result;
     }
 
+    /**
+     * Updates the family specified by id parameter.
+     *
+     * @param id      Id atribute of the family object that want to update
+     * @param familia family object with the updated values.
+     * @return true if the update operation was succesfully,false if not.
+     * @throws UnknownHostException if the collection doesn´t exist.
+     * @see Family
+     */
     public boolean modificar(int id, Family familia) throws UnknownHostException {
         boolean result = false;
         int famMembers = familia.getPersonas().length;
