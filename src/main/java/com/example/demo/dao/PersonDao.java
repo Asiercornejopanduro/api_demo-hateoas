@@ -16,8 +16,6 @@ import static com.example.demo.dao.MongoConector.getConnectionDbAndCollection;
 public class PersonDao {
 
     private static PersonDao INSTANCE = null;
-    private ArrayList<Person> personas = null;
-    private static PersonDao personaDao = null;
 
 
     private static final String DB = "publicaciones-familias";
@@ -38,7 +36,7 @@ public class PersonDao {
 
     public ArrayList<Person> listar() throws UnknownHostException {
 
-        personas = new ArrayList<>();
+        ArrayList<Person> personas = new ArrayList<>();
         DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
 
         JacksonDBCollection<Person, String> coll = JacksonDBCollection.wrap(collection, Person.class, String.class);
@@ -80,7 +78,6 @@ public class PersonDao {
     public boolean eliminar(int id) throws UnknownHostException {
         boolean result = false;
         DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
-        JacksonDBCollection<Person, String> coll = JacksonDBCollection.wrap(collection, Person.class, String.class);
 
         DBObject findDoc = new BasicDBObject("personId", id);
         com.mongodb.WriteResult res = collection.remove(findDoc);

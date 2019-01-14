@@ -31,8 +31,16 @@ public class FamilyDao {
         return INSTANCE;
     }
 
+
+    /**
+     * Reads all the documents storaged on the "familias" collection, from the "publicaciones-familias" database,and puts them on an ArrayList
+     *
+     * @return an ArrayList of Family objects
+     * @throws UnknownHostException if the familias collection is empty.
+     * @see Family
+     */
     public ArrayList<Family> listar() throws UnknownHostException {
-        ArrayList<Family> familias = new ArrayList<Family>();
+        ArrayList<Family> familias = new ArrayList<>();
         DBCollection collection;
 
         collection = getConnectionDbAndCollection(DB, COLLECTION);
@@ -52,10 +60,18 @@ public class FamilyDao {
         return familias;
     }
 
+    /**
+     * Gets a Family object specified by the id parameter.
+     *
+     * @param id the id number of the family which want to see.
+     * @return the family object  which have the specified id if exist on the collection.
+     * @see Family
+     */
+
     public Family obtenerPorId(int id) {
         Family familia = new Family();
 
-        DBCollection collection = null;
+        DBCollection collection;
         try {
             collection = getConnectionDbAndCollection(DB, COLLECTION);
             JacksonDBCollection<Family, String> coll = JacksonDBCollection.wrap(collection, Family.class, String.class);
@@ -76,6 +92,13 @@ public class FamilyDao {
 
         return familia;
     }
+
+    /**
+     * Delete the specified family document by the id parameter,from the "familias" collection on the "publicaciones-familias" database.
+     *
+     * @param id family id atribute which want to delete.
+     * @return true if the delete operation was succesfully, false if not.
+     */
 
     public boolean eliminar(int id) {
         boolean result = false;
@@ -130,9 +153,7 @@ public class FamilyDao {
         DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Family, String> coll = JacksonDBCollection.wrap(collection, Family.class, String.class);
         BasicDBObject newDocument = new BasicDBObject();
-        BasicDBObject query = new BasicDBObject();
-
-        BasicDBObject[] per= new BasicDBObject[0];
+        BasicDBObject[] per = new BasicDBObject[0];
 
         for (int x = 0; x < famMembers; x++) {
             newDocument.put("personas[" + x + "]._id", people[x].get_id());
