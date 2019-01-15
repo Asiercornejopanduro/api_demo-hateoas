@@ -1,10 +1,13 @@
 package com.example.demo.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.hateoas.ResourceSupport;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Comment extends ResourceSupport {
 
     //Atributes
+    @JsonIgnore
     private String _id;
     private Family familia;
     private String texto;

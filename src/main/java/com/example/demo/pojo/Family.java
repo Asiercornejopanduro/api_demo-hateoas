@@ -1,12 +1,16 @@
 package com.example.demo.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.hateoas.ResourceSupport;
 
 import java.util.Arrays;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Family extends ResourceSupport {
 
     //Atributes
+    @JsonIgnore
     private String _id;
     private int familyId;
     private String nombre;

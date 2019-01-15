@@ -11,18 +11,19 @@ import org.mongojack.WriteResult;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import static com.example.demo.dao.MongoConector.getConnectionDbAndCollection;
-
 public class CommentDao {
 
 
     private static CommentDao INSTANCE = null;
     private static final String DB = "publicaciones-familias";
     private static final String COLLECTION = "comments";
+    private static DBCollection collection;
+    private static MongoConector conector;
 
 
     private CommentDao() {
         super();
+        conector = MongoConector.getInstance();
     }
 
     public static synchronized CommentDao getInstance() {
@@ -41,7 +42,7 @@ public class CommentDao {
      */
     public ArrayList<Comment> listar() throws UnknownHostException {
         ArrayList<Comment> comments = new ArrayList<>();
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
 
         JacksonDBCollection<Comment, String> coll = JacksonDBCollection.wrap(collection, Comment.class, String.class);
         // Busco todos los documentos de la colección y los imprimo
@@ -67,10 +68,8 @@ public class CommentDao {
      */
     public Comment obtenerPorId(int id) {
         Comment comment = new Comment();
-
-        DBCollection collection;
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
             JacksonDBCollection<Comment, String> coll = JacksonDBCollection.wrap(collection, Comment.class, String.class);
 
             BasicDBObject query = new BasicDBObject();
@@ -102,7 +101,7 @@ public class CommentDao {
 
         DBCollection collection;
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
             JacksonDBCollection<Comment, String> coll = JacksonDBCollection.wrap(collection, Comment.class, String.class);
             DBObject findComments = new BasicDBObject("persona.personId", id);
             DBCursor<Comment> cursor = coll.find(findComments);
@@ -127,9 +126,8 @@ public class CommentDao {
      */
     public boolean eliminar(int id) {
         boolean result = false;
-        DBCollection collection = null;
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -152,9 +150,8 @@ public class CommentDao {
      */
     public boolean crear(Comment comment) {
         boolean result = false;
-        DBCollection collection = null;
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -185,7 +182,7 @@ public class CommentDao {
      */
     public boolean modificar(int id, Comment comment) throws UnknownHostException {
         boolean result = false;
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Comment, String> coll = JacksonDBCollection.wrap(collection, Comment.class, String.class);
         BasicDBObject query = new BasicDBObject();
         BasicDBObject obj = new BasicDBObject();
@@ -196,7 +193,7 @@ public class CommentDao {
         obj.append("commentId", comment.getCommentId());
         obj.append("texto", comment.getTexto());
 
-        per.append("_id", comment.getPersona().get_id());
+
         per.append("personId", comment.getPersona().getPersonId());
         per.append("nombre", comment.getPersona().getNombre());
         per.append("familyId", comment.getPersona().getFamilyId());

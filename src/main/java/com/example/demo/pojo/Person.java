@@ -1,11 +1,12 @@
 package com.example.demo.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.ResourceSupport;
 
 public class Person extends ResourceSupport {
 
     //Atributes
-
+    @JsonIgnore
     private String _id;
     private int personId;
     private int familyId;

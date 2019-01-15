@@ -38,7 +38,8 @@ public class FamilyController {
      *
      * @return ResponseEntity object with all the families documents on the collection, and the http status code,Ok if the operation was succesfully or CONFLICT if not.
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = "application/hal+json")
+
     public ResponseEntity<Object> listAll() {
 
         ResponseEntity<Object> response = new ResponseEntity<>(familias, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -79,7 +80,7 @@ public class FamilyController {
      * @param id Family id wich indicates the location of the resource.
      * @return ResponseEntity object with the requested resource and the http status code, FOUND if exist and NOT_FOUND if not, and the requested resource.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/hal+json")
     public ResponseEntity<Object> detail(@PathVariable int id) {
         Family family;
 
@@ -122,7 +123,7 @@ public class FamilyController {
      * @param familia Family object in JSON format, wich want to insert.
      * @return ResponseEntity object with the http status code, CREATED if the operation was succesfully,BAD_REQUEST if not, and the inserted object.
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = "application/hal+json")
     public ResponseEntity<Object> crear(@RequestBody Family familia) {
         ResponseEntity<Object> response = new ResponseEntity<>(familias, HttpStatus.INTERNAL_SERVER_ERROR);
 

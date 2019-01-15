@@ -42,7 +42,7 @@ public class PersonController {
      *
      * @return ResponseEntity object with all the people documents on the collection, and the http status code,Ok if the operation was succesfully or CONFLICT if not.
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = "application/hal+json")
     public ResponseEntity<Object> listAll() {
 
         ResponseEntity<Object> response = new ResponseEntity<>(people, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -69,7 +69,7 @@ public class PersonController {
                     if (!comments.isEmpty()) {
                         for (Comment c : comments) {
 
-                            Link commentLink = linkTo(CommentController.class).slash(c.getCommentId()).withRel("Comentarios");
+                            Link commentLink = linkTo(CommentController.class).slash(c.getCommentId()).withRel("Comentario nº" + c.getCommentId());
                             p.add(commentLink);
                         }
                     }
@@ -95,7 +95,7 @@ public class PersonController {
      * @param id Person id wich indicates the location of the resource.
      * @return ResponseEntity object with the requested resource and the http status code, FOUND if exist and NOT_FOUND if not, and the requested resource.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET,produces = "application/hal+json")
     public ResponseEntity<Object> detail(@PathVariable int id) {
         Person persona;
 
@@ -167,7 +167,7 @@ public class PersonController {
      * @param persona Person object in JSON format, wich want to insert.
      * @return ResponseEntity object with the http status code, CREATED if the operation was succesfully and BAD_REQUEST if not and the inserted object.
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST,produces = "application/hal+json")
     public ResponseEntity<Object> crear(@RequestBody Person persona) {
         ResponseEntity<Object> response = new ResponseEntity<>(people, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -197,7 +197,7 @@ public class PersonController {
      * @param p  Person object with the updated values.
      * @return ResponseEntity object with the http status code, Ok if the operation was succesfully and BAD_REQUEST if not.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = "application/hal+json")
     public ResponseEntity<Object> moodificar(@PathVariable int id, @RequestBody Person p) {
 
         ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

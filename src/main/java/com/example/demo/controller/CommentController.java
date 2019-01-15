@@ -40,7 +40,7 @@ public class CommentController {
      *
      * @return ResponseEntity object with all the comments documents on the collection, and the http status code,Ok if the operation was succesfully or CONFLICT if not.
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = "application/hal+json")
     public ResponseEntity<Object> listAll() {
 
         ResponseEntity<Object> response = new ResponseEntity<>(comments, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -54,12 +54,18 @@ public class CommentController {
                 for (Comment c : comments) {
                     Person p = c.getPersona();
                     Family f = c.getFamilia();
+                    for (Person per :
+                            f.getPersonas()) {
+                        Link selfLink = linkTo(CommentController.class).slash(c.getCommentId()).withSelfRel();
+                        per.add(selfLink);
+
+                    }
                     Link selfLink = linkTo(CommentController.class).slash(c.getCommentId()).withSelfRel();
                     c.add(selfLink);
                     Link personLink = linkTo(PersonController.class).slash(c.getPersona().getPersonId()).withRel("Autor");
-                    c.add(personLink);
+                    p.add(personLink);
                     Link familyLink = linkTo(methodOn(FamilyController.class).detail(f.getFamilyId())).withRel("Familia");
-                    c.add(familyLink);
+                    f.add(familyLink);
                     Link commentsLink = linkTo(methodOn(CommentController.class).listAll()).withRel("Listado Comentarios");
                     c.add(commentsLink);
 
@@ -86,7 +92,7 @@ public class CommentController {
      * @param id Comment id wich indicates the location of the resource.
      * @return ResponseEntity object with the requested resource and the http status code, FOUND if exist and NOT_FOUND if not.
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/hal+json")
     public ResponseEntity<Object> detail(@PathVariable int id) {
         Comment comment;
 
@@ -151,7 +157,7 @@ public class CommentController {
      * @param comment Comment object in JSON format, wich want to insert.
      * @return ResponseEntity object with the http status code, CREATED if the operation was succesfully and BAD_REQUEST if not.
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = "application/hal+json")
     public ResponseEntity<Object> crear(@RequestBody Comment comment) {
         ResponseEntity<Object> response = new ResponseEntity<>(comments, HttpStatus.INTERNAL_SERVER_ERROR);
 

@@ -12,16 +12,18 @@ import org.mongojack.WriteResult;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import static com.example.demo.dao.MongoConector.getConnectionDbAndCollection;
-
 public class FamilyDao {
     private static FamilyDao INSTANCE = null;
     private static final String DB = "publicaciones-familias";
     private static final String COLLECTION = "familias";
+    private static MongoConector conector;
+    private static DBCollection collection;
 
 
     public FamilyDao() {
         super();
+        conector = MongoConector.getInstance();
+
     }
 
     public static synchronized FamilyDao getInstance() {
@@ -41,11 +43,7 @@ public class FamilyDao {
      */
     public ArrayList<Family> listar() throws UnknownHostException {
         ArrayList<Family> familias = new ArrayList<>();
-        DBCollection collection;
-
-        collection = getConnectionDbAndCollection(DB, COLLECTION);
-
-
+        collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Family, String> coll = JacksonDBCollection.wrap(collection, Family.class, String.class);
         // Busco todos los documentos de la colección y los imprimo
         try (DBCursor<Family> cursor = coll.find()) {
@@ -71,9 +69,9 @@ public class FamilyDao {
     public Family obtenerPorId(int id) {
         Family familia = new Family();
 
-        DBCollection collection;
+
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
             JacksonDBCollection<Family, String> coll = JacksonDBCollection.wrap(collection, Family.class, String.class);
 
             BasicDBObject query = new BasicDBObject();
@@ -102,9 +100,9 @@ public class FamilyDao {
 
     public boolean eliminar(int id) {
         boolean result = false;
-        DBCollection collection = null;
+
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -128,9 +126,9 @@ public class FamilyDao {
 
     public boolean crear(Family familia) {
         boolean result = false;
-        DBCollection collection = null;
+
         try {
-            collection = getConnectionDbAndCollection(DB, COLLECTION);
+            collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -167,13 +165,13 @@ public class FamilyDao {
         boolean result = false;
         int famMembers = familia.getPersonas().length;
         Person[] people = familia.getPersonas();
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Family, String> coll = JacksonDBCollection.wrap(collection, Family.class, String.class);
         BasicDBObject newDocument = new BasicDBObject();
         BasicDBObject[] per = new BasicDBObject[0];
 
         for (int x = 0; x < famMembers; x++) {
-            newDocument.put("personas[" + x + "]._id", people[x].get_id());
+
             newDocument.put("personas" + x + ".nombre", people[x].getNombre());
             newDocument.put("personas" + x + ".familyId", people[x].getFamilyId());
             newDocument.put("personas" + x + ".personId", people[x].getPersonId());

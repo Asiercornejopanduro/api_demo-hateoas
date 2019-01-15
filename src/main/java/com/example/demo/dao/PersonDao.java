@@ -11,17 +11,16 @@ import org.mongojack.WriteResult;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import static com.example.demo.dao.MongoConector.getConnectionDbAndCollection;
-
 public class PersonDao {
 
     private static PersonDao INSTANCE = null;
     private static final String DB = "publicaciones-familias";
     private static final String COLLECTION = "personas";
-
+    private static MongoConector conector;
 
     private PersonDao() {
         super();
+        conector = MongoConector.getInstance();
     }
 
     public static synchronized PersonDao getInstance() {
@@ -41,7 +40,7 @@ public class PersonDao {
     public ArrayList<Person> listar() throws UnknownHostException {
 
         ArrayList<Person> personas = new ArrayList<>();
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        DBCollection collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
 
         JacksonDBCollection<Person, String> coll = JacksonDBCollection.wrap(collection, Person.class, String.class);
         // Busco todos los documentos de la colección y los imprimo
@@ -68,7 +67,7 @@ public class PersonDao {
     public Person obtenerPorId(int id) throws UnknownHostException {
         Person p = new Person();
 
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        DBCollection collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Person, String> coll = JacksonDBCollection.wrap(collection, Person.class, String.class);
 
         BasicDBObject query = new BasicDBObject();
@@ -95,7 +94,7 @@ public class PersonDao {
      */
     public boolean eliminar(int id) throws UnknownHostException {
         boolean result = false;
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        DBCollection collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
 
         DBObject findDoc = new BasicDBObject("personId", id);
         com.mongodb.WriteResult res = collection.remove(findDoc);
@@ -116,7 +115,7 @@ public class PersonDao {
     public boolean crear(Person p) throws UnknownHostException {
 
         boolean result = false;
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        DBCollection collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Person, String> coll = JacksonDBCollection.wrap(collection, Person.class, String.class);
 
         long numDoc = collection.getCount() + 1;
@@ -125,7 +124,6 @@ public class PersonDao {
 
         WriteResult<Person, String> res = coll.insert(p);
         Person dObj = res.getSavedObject();
-        p.set_id(dObj.get_id());
         System.out.println(dObj.toString());
 
         if (dObj != null) {
@@ -147,10 +145,9 @@ public class PersonDao {
      */
     public boolean modificar(int id, Person p) throws UnknownHostException {
         boolean result = false;
-        DBCollection collection = getConnectionDbAndCollection(DB, COLLECTION);
+        DBCollection collection = conector.getConnectionDbAndCollection(DB, COLLECTION);
         JacksonDBCollection<Person, String> coll = JacksonDBCollection.wrap(collection, Person.class, String.class);
         BasicDBObject newDocument = new BasicDBObject();
-        newDocument.put("_id", p.get_id());
         newDocument.put("personId", p.getPersonId());
         newDocument.put("familyId", p.getFamilyId());
         newDocument.put("nombre", p.getNombre());
