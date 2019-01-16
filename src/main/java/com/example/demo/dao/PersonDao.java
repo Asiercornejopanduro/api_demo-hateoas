@@ -138,7 +138,7 @@ public class PersonDao {
     /**
      * Updates the comment specified by id parameter.
      *
-     * @param id Id atribute of the Person object that want to update
+     * @param id Id atribute of the Person object that want to update.
      * @param p  Person object with the updated values.
      * @return true if the update operation was succesfully,false if not.
      * @throws UnknownHostException if the database publicaciones-familias,the personas collection or both don´t exist.
