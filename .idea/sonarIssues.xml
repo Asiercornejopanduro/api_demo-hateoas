@@ -78,6 +78,31 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../api_demo-hateoas/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../api_demo-hateoas/src/main/java/com/example/demo/DemoApp.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../api_demo-hateoas/src/main/java/com/example/demo/pojo/Person.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../api_demo-hateoas/src/main/java/repositories/PersonRepository.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../api_demo-hateoas/src/main/java/repositories/PersonRepositoryImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
       </map>
     </option>
   </component>

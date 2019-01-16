@@ -54,7 +54,7 @@ public class HelloControler {
         listado.add(commentsLink);
 
 
-        ResponseEntity<Object> response = new ResponseEntity<Object>(listado, HttpStatus.INTERNAL_SERVER_ERROR);
+        ResponseEntity<Object> response = new ResponseEntity<>(listado, HttpStatus.INTERNAL_SERVER_ERROR);
         if (!listado.isEmpty()) {
             response = new ResponseEntity<>(listado, HttpStatus.OK);
         }
